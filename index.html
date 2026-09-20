@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web AI - Temperature & TopK</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Web AI Demo</h1>
+
+        <div id="status" class="status">Verificando modelo local...</div>
+
+        <div id="model-params" class="model-params">
+            <strong>Parâmetros do modelo</strong>
+            <div>defaultTemperature: <span id="default-temperature">-</span></div>
+            <div>maxTemperature: <span id="max-temperature">-</span></div>
+            <div>defaultTopK: <span id="default-topk">-</span></div>
+            <div>maxTopK: <span id="max-topk">-</span></div>
+        </div>
+
+        <form id="question-form">
+            <div class="parameters">
+                <div class="param-group">
+                    <label for="temperature">
+                        Temperature:
+                        <span id="temp-value" class="value-display"></span>
+                    </label>
+                    <input type="range" id="temperature" name="temperature" step="0.1">
+                    <div class="param-description">
+                        Valores menores tendem a respostas mais previsíveis;
+                        valores maiores aumentam a variação.
+                    </div>
+                </div>
+
+                <div class="param-group">
+                    <label for="topK">
+                        Top K:
+                        <span id="topk-value" class="value-display"></span>
+                    </label>
+                    <input type="number" id="topK" name="topK">
+                    <div class="param-description">
+                        Limita a seleção às K alternativas mais prováveis.
+                    </div>
+                </div>
+
+                <div class="param-group">
+                    <label for="language">Idioma esperado</label>
+                    <select id="language" name="language">
+                        <option value="en" selected>English (suportado)</option>
+                        <option value="pt">Português (experimental)</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                        <option value="de">Deutsch</option>
+                        <option value="ja">日本語</option>
+                    </select>
+                    <div class="param-description">
+                        Português ainda não é listado oficialmente pela Prompt API.
+                        Para testes mais previsíveis, use um idioma suportado.
+                    </div>
+                </div>
+            </div>
+
+            <label for="question">Converse com ela:</label>
+            <textarea
+                name="question"
+                id="question"
+                placeholder='Ex.: Complete a frase "O céu é..."'
+            ></textarea>
+
+            <button type="submit" id="ask-button" disabled>Verificando...</button>
+        </form>
+
+        <div id="output"></div>
+
+        <a id="open-tab" href="index.html" target="_blank" rel="noopener noreferrer">
+            Abrir em uma aba
+        </a>
+
+        <footer class="copyright">
+            Experimento Chrome Built-in AI — <span id="year"></span>
+        </footer>
+    </div>
+
+    <script type="module" src="./index.js"></script>
+</body>
+</html>

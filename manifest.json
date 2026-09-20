@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Web AI - Temperature & TopK",
+  "version": "1.0.0",
+  "description": "Experimento com Chrome Built-in AI usando LanguageModel.params(), temperature e topK.",
+  "minimum_chrome_version": "138",
+  "action": {
+    "default_title": "Web AI - Temperature & TopK",
+    "default_popup": "index.html"
+  }
+}
