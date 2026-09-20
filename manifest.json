@@ -1,11 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "Web AI - Temperature & TopK",
-  "version": "1.0.0",
-  "description": "Experimento com Chrome Built-in AI usando LanguageModel.params(), temperature e topK.",
+  "name": "Web AI - Temperature, TopK & Multimodal",
+  "version": "1.1.0",
+  "description": "Experimento com Chrome Built-in AI usando Temperature, TopK e entradas multimodais de imagem e áudio.",
   "minimum_chrome_version": "138",
   "action": {
-    "default_title": "Web AI - Temperature & TopK",
+    "default_title": "Web AI - Temperature, TopK & Multimodal",
     "default_popup": "index.html"
   }
 }

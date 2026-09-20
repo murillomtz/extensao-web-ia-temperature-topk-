@@ -1,19 +1,27 @@
-# Web AI — Temperature & Top K com Gemini Nano
+# Web AI — Temperature, Top K e Multimodal com Gemini Nano
 
-Projeto experimental para testar a **Prompt API nativa do Google Chrome** usando o modelo local **Gemini Nano**.
+Extensão experimental para testar a **Prompt API nativa do Google Chrome** usando o modelo local **Gemini Nano**.
 
-O objetivo deste projeto é permitir testar, diretamente no navegador:
+A versão `1.1.0` mantém todas as funcionalidades anteriores e adiciona entrada multimodal.
+
+## Funcionalidades
 
 - `Temperature`
 - `Top K`
 - `LanguageModel.params()`
+- `LanguageModel.availability()`
 - `LanguageModel.create()`
 - `promptStreaming()`
-- download e execução local do modelo de IA do Chrome
-
-> Este projeto foi preparado como uma **Chrome Extension**, porque nas versões atuais do Chrome os parâmetros numéricos `temperature`, `topK` e `LanguageModel.params()` continuam disponíveis em extensões.
-
----
+- download/preparação do Gemini Nano
+- entrada de texto
+- múltiplas imagens
+- arquivo de áudio
+- texto + imagem
+- texto + áudio
+- texto + imagem + áudio
+- preview dos anexos
+- idiomas suportados + Português experimental
+- acompanhamento do download de recursos do modelo
 
 ## Autor
 
@@ -24,143 +32,77 @@ O objetivo deste projeto é permitir testar, diretamente no navegador:
 
 ---
 
-# 1. O que você precisa
+# 1. Requisitos
 
-Para utilizar o projeto, você precisa de:
+Use o **Google Chrome normal atualizado**.
 
-- Google Chrome atualizado
-- Windows, macOS, Linux ou ChromeOS compatível
-- suporte às APIs de IA integradas do Chrome
-- espaço em disco suficiente para o download do modelo
-- conexão com a internet para o primeiro download do Gemini Nano
-
-> Use preferencialmente o **Google Chrome normal atualizado**.  
-> Não é recomendado usar **Chrome for Testing** para este laboratório.
+A Prompt API executa com um modelo local do Chrome. O Gemini Nano pode precisar ser baixado na primeira utilização.
 
 ---
 
-# 2. Baixe e extraia o ZIP
+# 2. Habilitar as APIs experimentais
 
-Baixe o arquivo ZIP do projeto.
-
-Depois:
-
-1. Clique com o botão direito no arquivo.
-2. Escolha **Extrair tudo**.
-3. Escolha uma pasta.
-4. Abra a pasta extraída.
-
-A estrutura deve ser parecida com:
-
-```text
-webai-temperature-topk-extension/
-│
-├── manifest.json
-├── index.html
-├── index.js
-├── style.css
-└── README.md
-```
-
-O arquivo mais importante para o Chrome reconhecer o projeto como extensão é:
-
-```text
-manifest.json
-```
-
----
-
-# 3. Ative a Prompt API no Chrome
-
-Abra uma nova aba do Chrome e acesse:
+Abra:
 
 ```text
 chrome://flags/#prompt-api
 ```
 
-Você verá a página de recursos experimentais do Chrome.
-
-Procure e habilite:
+Habilite:
 
 ```text
 Prompt API
 ```
 
-Altere de:
-
-```text
-Default
-```
-
-para:
-
-```text
-Enabled
-```
-
----
-
-## 3.1 Prompt API Multimodal Input
-
-Na mesma página procure:
+e:
 
 ```text
 Prompt API Multimodal Input
 ```
 
-Também altere para:
+Mude ambas para:
 
 ```text
 Enabled
 ```
 
-Essa opção adiciona suporte a entradas multimodais, como imagem e áudio, quando disponíveis pela API.
-
-Para este laboratório de `Temperature` e `Top K`, o recurso principal é a **Prompt API**, mas é recomendado deixar o suporte multimodal habilitado para os próximos experimentos.
-
----
-
-# 4. Reinicie o Chrome
-
-Depois de alterar as flags, o Chrome mostrará um botão para reiniciar o navegador.
-
-Clique em:
+Depois clique em:
 
 ```text
 Relaunch
 ```
 
-ou:
+para reiniciar o Chrome.
 
-```text
-Reiniciar
-```
-
-É importante reiniciar completamente o Chrome para que as APIs sejam ativadas.
+A flag multimodal é necessária para os testes com imagem e áudio nas versões em que esse recurso ainda estiver protegido por flag.
 
 ---
 
-# 5. Abra a página de extensões
+# 3. Instalar a extensão localmente
 
-Depois que o Chrome reiniciar, abra:
+Extraia o ZIP.
+
+A pasta deve conter:
+
+```text
+README.md
+index.html
+index.js
+manifest.json
+style.css
+```
+
+Abra:
 
 ```text
 chrome://extensions
 ```
 
-No canto superior direito, ative:
+Ative:
 
 ```text
 Modo do desenvolvedor
 ```
-
-ou:
-
-```text
-Developer mode
-```
-
-Depois aparecerão novos botões.
 
 Clique em:
 
@@ -168,124 +110,29 @@ Clique em:
 Carregar sem compactação
 ```
 
-ou:
-
-```text
-Load unpacked
-```
+Selecione a pasta que contém `manifest.json`.
 
 ---
 
-# 6. Selecione a pasta do projeto
+# 4. Preparar o modelo
 
-Na janela que abrir, selecione a pasta que contém:
+Abra a extensão.
 
-```text
-manifest.json
-```
-
-Não selecione o arquivo `manifest.json` diretamente.
-
-Selecione a **pasta inteira**.
-
-Exemplo:
-
-```text
-webai-temperature-topk-extension/
-```
-
-Depois clique em:
-
-```text
-Selecionar pasta
-```
-
-A extensão será carregada no Chrome.
-
----
-
-# 7. Abra a extensão
-
-Na barra do Chrome, clique no ícone de extensões:
-
-```text
-🧩
-```
-
-Procure:
-
-```text
-Web AI - Temperature & TopK
-```
-
-Você pode clicar no ícone de alfinete para deixá-la fixa na barra do navegador.
-
-Depois clique na extensão.
-
-Também é possível clicar em:
-
-```text
-Abrir em uma aba
-```
-
-dentro da própria interface.
-
----
-
-# 8. Primeira execução: preparar o Gemini Nano
-
-O modelo Gemini Nano não necessariamente já estará instalado no computador.
-
-Na primeira execução, a extensão verifica o estado do modelo.
-
-Se aparecer algo como:
-
-```text
-Gemini Nano ainda não está instalado.
-```
-
-ou:
+Se aparecer:
 
 ```text
 Preparar modelo
 ```
 
-clique no botão:
+clique no botão.
 
-```text
-Preparar modelo
-```
+O Chrome poderá baixar o Gemini Nano.
 
-Esse clique chama:
-
-```javascript
-LanguageModel.create()
-```
-
-e permite que o Chrome faça o download do modelo local.
-
-Durante o download, a interface pode mostrar:
-
-```text
-Baixando Gemini Nano: 10%
-Baixando Gemini Nano: 35%
-Baixando Gemini Nano: 80%
-Baixando Gemini Nano: 100%
-```
-
-O download pode levar alguns minutos.
-
----
-
-# 9. Quando o modelo estiver pronto
-
-Depois que o modelo estiver disponível, a extensão consulta:
+Depois disso a extensão exibirá os limites retornados por:
 
 ```javascript
 LanguageModel.params()
 ```
-
-e apresenta os limites reais disponibilizados pelo Chrome.
 
 Exemplo:
 
@@ -298,172 +145,172 @@ Exemplo:
 }
 ```
 
-Os valores podem variar conforme a versão do navegador e do modelo.
+---
+
+# 5. Temperature e Top K
+
+## Temperature
+
+Valores menores tendem a gerar respostas mais previsíveis.
+
+Valores maiores aumentam a variação das respostas.
+
+## Top K
+
+Define quantas alternativas mais prováveis podem ser consideradas na geração.
+
+Nas extensões do Chrome, quando `temperature` e `topK` são definidos manualmente, os dois são enviados juntos na criação da sessão.
 
 ---
 
-# 10. Temperature
+# 6. Teste somente com texto
 
-`Temperature` controla o nível de variação da resposta.
+Deixe os campos de imagem e áudio vazios.
 
-De forma simplificada:
+Digite, por exemplo:
 
 ```text
-Temperature menor
-        ↓
-resposta mais previsível
-        ↓
-menos variação
+Give me three different names for a futuristic city.
 ```
 
+Clique em:
+
 ```text
-Temperature maior
-        ↓
-mais possibilidades
-        ↓
-respostas potencialmente mais criativas
+Enviar
+```
+
+Altere Temperature e Top K e repita a mesma pergunta para comparar.
+
+---
+
+# 7. Teste com imagem
+
+Clique no campo:
+
+```text
+Imagens
+```
+
+Selecione uma ou mais imagens.
+
+Exemplo de prompt:
+
+```text
+Describe this image in detail.
+```
+
+ou, com múltiplas imagens:
+
+```text
+Compare these images and explain their main differences.
+```
+
+Os arquivos são enviados diretamente à Prompt API como entradas do tipo:
+
+```javascript
+{ type: 'image', value: imageFile }
+```
+
+---
+
+# 8. Teste com áudio
+
+Selecione um arquivo no campo:
+
+```text
+Áudio
 ```
 
 Exemplo:
 
 ```text
-0.2
+Transcribe this audio and summarize its main idea.
 ```
 
-tende a produzir resultados mais previsíveis.
+O arquivo é enviado à Prompt API como:
 
-Enquanto:
-
-```text
-1.8
+```javascript
+{ type: 'audio', value: audioFile }
 ```
-
-tende a permitir maior variação.
 
 ---
 
-# 11. Top K
+# 9. Teste combinado
 
-`Top K` limita quantas opções prováveis o modelo considera durante a geração.
+É possível selecionar:
+
+```text
+texto + imagem
+texto + áudio
+texto + imagens + áudio
+```
 
 Exemplo:
 
 ```text
-Top K = 3
+Use the images and audio together and explain what information they contain.
 ```
 
-significa que a seleção fica mais restrita.
-
-Enquanto:
-
-```text
-Top K = 100
-```
-
-permite considerar uma quantidade maior de possibilidades.
-
----
-
-# 12. Fazendo o experimento
-
-Para perceber melhor a diferença, use sempre a **mesma pergunta**.
+A sessão declara as modalidades utilizadas por meio de `expectedInputs`.
 
 Exemplo:
 
-```text
-Complete a frase: "O céu é..."
+```javascript
+expectedInputs: [
+    { type: 'text', languages: ['en'] },
+    { type: 'image' },
+    { type: 'audio' }
+]
 ```
 
-Primeiro teste com:
+A saída continua sendo texto:
 
-```text
-Temperature: 0.2
-Top K: 3
+```javascript
+expectedOutputs: [
+    { type: 'text', languages: ['en'] }
+]
 ```
-
-Execute várias vezes.
-
-Depois teste:
-
-```text
-Temperature: 1.8
-Top K: 100
-```
-
-Execute várias vezes novamente.
-
-Compare as respostas.
-
-O objetivo é observar como os parâmetros alteram o comportamento da geração.
 
 ---
 
-# 13. Idiomas
+# 10. Formatos multimodais
 
-Atualmente, a Prompt API do Chrome oferece suporte oficial aos seguintes idiomas:
+A Prompt API aceita diferentes objetos de imagem e áudio.
+
+Neste projeto utilizamos arquivos selecionados pelo usuário, que são fornecidos ao navegador como `File`, compatível com `Blob`.
+
+A extensão aceita:
 
 ```text
-en — Inglês
-es — Espanhol
-fr — Francês
-de — Alemão
-ja — Japonês
+image/*
+audio/*
 ```
 
-Português está disponível neste projeto como:
+---
+
+# 11. Idiomas
+
+Idiomas atualmente configurados como oficialmente suportados neste laboratório:
+
+```text
+en
+es
+fr
+de
+ja
+```
+
+Português continua disponível como:
 
 ```text
 Português (experimental)
 ```
 
-Isso significa que ele pode funcionar em alguns cenários, mas ainda pode gerar avisos ou erros dependendo da versão do Chrome e do modelo.
-
-Para validar se tudo está funcionando corretamente pela primeira vez, use:
-
-```text
-English (supported)
-```
+Para validar o funcionamento inicial, use `English`.
 
 ---
 
-# 14. Verificando o modelo local
-
-O Chrome possui uma página interna específica para diagnosticar os modelos de IA executados localmente no navegador.
-
-A página é:
-
-```text
-chrome://on-device-internals
-```
-
-Ela pode ajudar a verificar informações como:
-
-- estado do modelo local
-- download do Gemini Nano
-- carregamento do modelo
-- erros internos
-- eventos relacionados às APIs de IA
-- disponibilidade do modelo no dispositivo
-
-Porém, nas versões atuais do Chrome, essa página pode estar desativada por padrão.
-
-Se ao abrir:
-
-```text
-chrome://on-device-internals
-```
-
-aparecer uma mensagem semelhante a:
-
-```text
-As páginas de depuração internas estão desativadas no momento.
-```
-
-é necessário habilitar primeiro as páginas internas de depuração.
-
----
-
-## 14.1 Habilitando as páginas internas de debug
+# 12. Debug do modelo local
 
 Abra:
 
@@ -471,35 +318,25 @@ Abra:
 chrome://chrome-urls/
 ```
 
-Role a página até encontrar a seção:
+Localize:
 
 ```text
 Internal Debugging Page URLs
 ```
 
-Nessa área aparecerá uma mensagem semelhante a:
-
-```text
-Internal debugging pages are currently disabled.
-```
-
-Procure o botão:
+Se estiver desativado, clique em:
 
 ```text
 Enable internal debugging pages
 ```
 
-e clique nele.
-
-Depois disso, volte para:
+Depois abra:
 
 ```text
 chrome://on-device-internals
 ```
 
-e atualize a página.
-
-O fluxo fica:
+Fluxo:
 
 ```text
 chrome://chrome-urls/
@@ -511,198 +348,103 @@ Enable internal debugging pages
 chrome://on-device-internals
 ```
 
----
-
-## 14.2 O que verificar em `chrome://on-device-internals`
-
-Depois que a página estiver habilitada, use-a para verificar se o modelo local está:
-
-```text
-disponível
-baixando
-carregando
-indisponível
-com erro
-```
-
-Essa página é especialmente útil quando:
+Use essa tela se:
 
 ```javascript
-await LanguageModel.params()
-```
-
-retorna:
-
-```javascript
-null
-```
-
-ou quando:
-
-```javascript
-await LanguageModel.availability(...)
-```
-
-não retorna o estado esperado.
-
-Também é útil quando a extensão fica aguardando:
-
-```text
-Preparando modelo
-```
-
-ou quando o download do Gemini Nano não começa.
-
----
-
-## 14.3 Relação com este projeto
-
-Neste projeto, o fluxo esperado é:
-
-```text
-Prompt API habilitada
-        ↓
-LanguageModel disponível
-        ↓
-LanguageModel.create()
-        ↓
-Chrome prepara ou baixa o modelo local
-        ↓
 LanguageModel.params()
-        ↓
-Temperature e Top K disponíveis
 ```
 
-Se alguma dessas etapas falhar, `chrome://on-device-internals` é um dos melhores lugares para investigar o motivo.
-# 15. Abrindo o Console
+retornar `null`, o download não começar, ou uma modalidade não estiver disponível.
 
-Se algo não funcionar, abra o DevTools.
+---
 
-Pressione:
+# 13. Erro NotSupportedError
+
+Se imagem ou áudio resultar em:
+
+```text
+NotSupportedError
+```
+
+verifique:
+
+1. Chrome atualizado.
+2. `Prompt API` habilitada.
+3. `Prompt API Multimodal Input` habilitada.
+4. Chrome reiniciado após alterar as flags.
+5. Modelo local disponível.
+6. Idioma/modalidade compatível com o modelo instalado.
+
+---
+
+# 14. Console
+
+Abra o DevTools com:
 
 ```text
 F12
 ```
 
-Depois acesse:
+e consulte:
 
 ```text
 Console
 ```
 
-A extensão registra informações como:
+A extensão registra:
 
 ```text
 availability
-download do modelo
-LanguageModel.params()
 Temperature
 Top K
+modalidades selecionadas
+nomes dos anexos
+progresso de download
+criação da sessão
 erros da Prompt API
 ```
 
 ---
 
-# 16. Atualizando a extensão depois de alterar o código
+# 15. Atualizando a extensão
 
-Se você modificar:
-
-```text
-index.js
-index.html
-style.css
-manifest.json
-```
-
-não precisa carregar tudo novamente.
-
-Abra:
+Depois de alterar arquivos:
 
 ```text
 chrome://extensions
 ```
 
-Encontre:
-
-```text
-Web AI - Temperature & TopK
-```
-
-e clique em:
+Encontre a extensão e clique em:
 
 ```text
 Recarregar
 ```
 
-Depois feche e abra novamente a extensão.
-
 ---
 
-# 17. Não precisa de npm
+# 16. Sem npm
 
-Esta versão foi preparada para funcionar diretamente como extensão.
-
-Você **não precisa executar**:
-
-```bash
-npm install
-npm start
-```
-
-Também não precisa iniciar:
+O projeto não precisa de:
 
 ```text
+npm install
+npm start
 http-server
 ```
 
-O próprio Chrome carrega:
-
-```text
-manifest.json
-index.html
-index.js
-style.css
-```
+Ele roda diretamente como **Chrome Extension Manifest V3**.
 
 ---
 
+# Referências
 
-# 19. Observação importante sobre Chrome Extensions
-
-Nas versões atuais da API, páginas Web comuns não possuem acesso padrão aos parâmetros numéricos:
-
-```javascript
-temperature
-topK
-LanguageModel.params()
-```
-
-Por isso este projeto utiliza uma **Chrome Extension**.
-
-Dentro desse contexto, é possível criar uma sessão como:
-
-```javascript
-const params = await LanguageModel.params()
-
-const session = await LanguageModel.create({
-    temperature: 1.5,
-    topK: 10
-})
-```
-
-Ao informar manualmente os parâmetros, `temperature` e `topK` devem ser fornecidos juntos.
-
----
-
-# 20. Referências oficiais
-
-Documentação da Prompt API:
+Prompt API:
 
 ```text
 https://developer.chrome.com/docs/ai/prompt-api
 ```
 
-Documentação de IA integrada do Chrome:
+Chrome Built-in AI:
 
 ```text
 https://developer.chrome.com/docs/ai/

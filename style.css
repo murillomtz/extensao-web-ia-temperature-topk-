@@ -6,8 +6,8 @@
 
 html,
 body {
-    width: 720px;
-    min-height: 560px;
+    width: 760px;
+    min-height: 620px;
 }
 
 body {
@@ -26,12 +26,34 @@ body {
     width: 100%;
 }
 
-h1 {
-    text-align: center;
-    color: #34d399;
+.hero {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
     margin-bottom: 18px;
+}
+
+h1 {
+    color: #34d399;
     font-size: 2em;
     text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+}
+
+.hero p {
+    color: #9ca3af;
+    margin-top: 5px;
+    font-size: 0.85em;
+}
+
+.version {
+    background: #1a1a1a;
+    border: 1px solid #34d399;
+    color: #34d399;
+    border-radius: 999px;
+    padding: 5px 9px;
+    font-family: Consolas, monospace;
+    font-size: 0.75em;
 }
 
 .status,
@@ -75,10 +97,11 @@ h1 {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
-    margin-bottom: 22px;
+    margin-bottom: 20px;
 }
 
-.param-group {
+.param-group,
+.attachment-card {
     display: flex;
     flex-direction: column;
 }
@@ -92,6 +115,7 @@ label {
 
 input[type="number"],
 input[type="range"],
+input[type="file"],
 select,
 textarea {
     border: 2px solid #404040;
@@ -102,8 +126,24 @@ textarea {
 }
 
 input[type="number"],
-select {
+select,
+input[type="file"] {
     padding: 10px;
+}
+
+input[type="file"] {
+    width: 100%;
+    font-size: 0.78em;
+}
+
+input[type="file"]::file-selector-button {
+    background: #303030;
+    color: #34d399;
+    border: 1px solid #4b5563;
+    border-radius: 6px;
+    padding: 7px 9px;
+    margin-right: 8px;
+    cursor: pointer;
 }
 
 input[type="range"] {
@@ -144,6 +184,107 @@ textarea:focus {
     color: #9ca3af;
     margin-top: 6px;
     line-height: 1.35;
+}
+
+.multimodal-panel {
+    border: 1px solid #404040;
+    border-radius: 12px;
+    background: #202020;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.section-title h2 {
+    color: #34d399;
+    font-size: 1.05em;
+    margin-bottom: 4px;
+}
+
+.section-title p {
+    color: #9ca3af;
+    font-size: 0.8em;
+}
+
+.attachment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.attachment-card {
+    border: 1px solid #363636;
+    border-radius: 10px;
+    padding: 12px;
+    background: #1a1a1a;
+    min-width: 0;
+}
+
+.image-preview {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.image-preview-item {
+    min-width: 0;
+}
+
+.image-preview-item img {
+    width: 100%;
+    height: 82px;
+    object-fit: cover;
+    border-radius: 7px;
+    border: 1px solid #404040;
+    display: block;
+}
+
+.image-preview-item span {
+    display: block;
+    margin-top: 4px;
+    color: #9ca3af;
+    font-size: 0.65em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.audio-preview {
+    margin-top: 10px;
+}
+
+.audio-preview audio {
+    width: 100%;
+    height: 34px;
+}
+
+.audio-name {
+    color: #9ca3af;
+    font-size: 0.72em;
+    margin-bottom: 6px;
+    overflow-wrap: anywhere;
+}
+
+.empty-preview {
+    color: #6b7280;
+    font-size: 0.75em;
+    display: block;
+    padding: 10px 0 2px;
+}
+
+.attachment-summary {
+    margin-top: 12px;
+    color: #34d399;
+    font-size: 0.78em;
+    font-family: Consolas, monospace;
 }
 
 textarea {
@@ -188,6 +329,21 @@ button.stop-button {
     color: #fff;
 }
 
+.secondary-button {
+    width: auto;
+    padding: 8px 10px;
+    background: #303030;
+    color: #d1d5db;
+    border: 1px solid #4b5563;
+    font-size: 0.75em;
+    white-space: nowrap;
+}
+
+.secondary-button:hover {
+    box-shadow: none;
+    border-color: #34d399;
+}
+
 #output {
     margin-top: 18px;
     padding: 16px;
@@ -227,13 +383,22 @@ button.stop-button {
     border-top: 1px solid #404040;
 }
 
-@media (max-width: 650px) {
+@media (max-width: 700px) {
     html,
     body {
         width: 100%;
     }
 
-    .parameters {
+    .parameters,
+    .attachment-grid {
         grid-template-columns: 1fr;
+    }
+
+    .section-title {
+        flex-direction: column;
+    }
+
+    .secondary-button {
+        width: 100%;
     }
 }

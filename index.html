@@ -3,25 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web AI - Temperature & TopK</title>
+    <title>Web AI - Temperature, TopK & Multimodal</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>🤖 Web AI Demo</h1>
+        <header class="hero">
+            <div>
+                <h1>🤖 Web AI Demo</h1>
+                <p>Prompt API + Gemini Nano + Temperature + Top K + Multimodal</p>
+            </div>
+            <span class="version">v1.1.0</span>
+        </header>
 
         <div id="status" class="status">Verificando modelo local...</div>
 
-        <div id="model-params" class="model-params">
+        <section id="model-params" class="model-params">
             <strong>Parâmetros do modelo</strong>
             <div>defaultTemperature: <span id="default-temperature">-</span></div>
             <div>maxTemperature: <span id="max-temperature">-</span></div>
             <div>defaultTopK: <span id="default-topk">-</span></div>
             <div>maxTopK: <span id="max-topk">-</span></div>
-        </div>
+        </section>
 
         <form id="question-form">
-            <div class="parameters">
+            <section class="parameters">
                 <div class="param-group">
                     <label for="temperature">
                         Temperature:
@@ -56,17 +62,65 @@
                         <option value="ja">日本語</option>
                     </select>
                     <div class="param-description">
-                        Português ainda não é listado oficialmente pela Prompt API.
-                        Para testes mais previsíveis, use um idioma suportado.
+                        Português permanece experimental na Prompt API.
                     </div>
                 </div>
-            </div>
+            </section>
+
+            <section class="multimodal-panel">
+                <div class="section-title">
+                    <div>
+                        <h2>📎 Entrada multimodal</h2>
+                        <p>Opcional: envie imagens e/ou um áudio junto com o texto.</p>
+                    </div>
+                    <button type="button" id="clear-attachments" class="secondary-button">
+                        Limpar anexos
+                    </button>
+                </div>
+
+                <div class="attachment-grid">
+                    <div class="attachment-card">
+                        <label for="image-input">🖼️ Imagens</label>
+                        <input
+                            type="file"
+                            id="image-input"
+                            accept="image/*"
+                            multiple
+                        >
+                        <div class="param-description">
+                            Você pode selecionar uma ou mais imagens.
+                        </div>
+                        <div id="image-preview" class="image-preview empty-preview">
+                            Nenhuma imagem selecionada.
+                        </div>
+                    </div>
+
+                    <div class="attachment-card">
+                        <label for="audio-input">🎵 Áudio</label>
+                        <input
+                            type="file"
+                            id="audio-input"
+                            accept="audio/*"
+                        >
+                        <div class="param-description">
+                            Envie um arquivo de áudio para análise ou transcrição.
+                        </div>
+                        <div id="audio-preview" class="audio-preview empty-preview">
+                            Nenhum áudio selecionado.
+                        </div>
+                    </div>
+                </div>
+
+                <div id="attachment-summary" class="attachment-summary">
+                    Somente texto
+                </div>
+            </section>
 
             <label for="question">Converse com ela:</label>
             <textarea
                 name="question"
                 id="question"
-                placeholder='Ex.: Complete a frase "O céu é..."'
+                placeholder="Ex.: Descreva a imagem anexada. / Transcreva este áudio. / Compare as imagens."
             ></textarea>
 
             <button type="submit" id="ask-button" disabled>Verificando...</button>
