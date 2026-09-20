@@ -1,6 +1,11 @@
-console.log('[Web AI Extension v1.1.0] index.js carregado')
+console.log('[Web AI Extension v1.1.1] index.js carregado')
 
 const SUPPORTED_LANGUAGES = ['en', 'es', 'fr', 'de', 'ja']
+
+const AUDIO_EXPERIMENTAL_COMMAND =
+    '& "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe" ' +
+    '--enable-features="AIPromptAPI,AIPromptAPIMultimodalInput,' +
+    'OnDeviceModelGpuAudioInput:on_device_model_audio_input_vram_min/5000"'
 
 const aiContext = {
     session: null,
@@ -12,7 +17,8 @@ const aiContext = {
     isPreparing: false,
     imageFiles: [],
     audioFile: null,
-    objectUrls: []
+    objectUrls: [],
+    capabilitiesChecked: false
 }
 
 const elements = {
@@ -137,7 +143,9 @@ function applyParams(params) {
     elements.button.textContent = 'Enviar'
 
     showReadyStatus()
-    console.log('[v1.1.0] LanguageModel.params():', params)
+    console.log('[v1.1.1] LanguageModel.params():', params)
+
+    detectMultimodalCapabilities()
 }
 
 function showReadyStatus() {
@@ -164,10 +172,82 @@ function showReadyStatus() {
     )
 }
 
+
+async function detectMultimodalCapabilities() {
+    if (aiContext.capabilitiesChecked) {
+        return
+    }
+
+    aiContext.capabilitiesChecked = true
+
+    try {
+        const expectedOutputs = [
+            { type: 'text', languages: ['en'] }
+        ]
+
+        const [imageAvailability, audioAvailability] = await Promise.all([
+            LanguageModel.availability({
+                expectedInputs: [
+                    { type: 'text', languages: ['en'] },
+                    { type: 'image' }
+                ],
+                expectedOutputs
+            }),
+            LanguageModel.availability({
+                expectedInputs: [
+                    { type: 'text', languages: ['en'] },
+                    { type: 'audio' }
+                ],
+                expectedOutputs
+            })
+        ])
+
+        console.log('[v1.1.1] Capabilities multimodais:', {
+            image: imageAvailability,
+            audio: audioAvailability
+        })
+
+        if (audioAvailability === 'unavailable') {
+            console.groupCollapsed(
+                '%c[Web AI] Áudio indisponível — verifique a VRAM',
+                'color:#f59e0b;font-weight:600'
+            )
+
+            console.warn(
+                'O Chrome não liberou a capability de áudio para o modelo atual.'
+            )
+
+            console.info(
+                'O Chromium usa 6144 MiB como limite padrão para liberar entrada de áudio. ' +
+                'Em GPUs próximas de 6 GB, o Chrome pode detectar uma quantidade ligeiramente abaixo desse limite.'
+            )
+
+            console.info(
+                'Confira a VRAM detectada em chrome://on-device-internals. ' +
+                'Se estiver abaixo de 6144 MiB, feche completamente o Chrome e execute no PowerShell:'
+            )
+
+            console.info(AUDIO_EXPERIMENTAL_COMMAND)
+
+            console.info(
+                'Esse override reduz o limite experimentalmente para 5000 MiB e vale somente para esta execução do Chrome. ' +
+                'Se fechar completamente ou reiniciar o navegador, será necessário executar o comando novamente.'
+            )
+
+            console.groupEnd()
+        }
+    } catch (error) {
+        console.debug(
+            '[v1.1.1] Não foi possível verificar as capabilities multimodais:',
+            error
+        )
+    }
+}
+
 async function loadParamsAfterModelIsReady() {
     const params = await LanguageModel.params()
 
-    console.log('[v1.1.0] params retornado:', params)
+    console.log('[v1.1.1] params retornado:', params)
 
     if (!params) {
         throw new Error(
@@ -200,7 +280,7 @@ async function prepareModel() {
                 monitor.addEventListener('downloadprogress', (event) => {
                     const percent = Math.round(event.loaded * 100)
 
-                    console.log(`[v1.1.0] Download base: ${percent}%`)
+                    console.log(`[v1.1.1] Download base: ${percent}%`)
                     setStatus(`Baixando Gemini Nano: ${percent}%`, 'warning')
                 })
             }
@@ -212,7 +292,7 @@ async function prepareModel() {
         await loadParamsAfterModelIsReady()
 
     } catch (error) {
-        console.error('[v1.1.0] Erro ao preparar modelo:', error)
+        console.error('[v1.1.1] Erro ao preparar modelo:', error)
 
         aiContext.ready = false
         aiContext.needsPreparation = true
@@ -450,7 +530,7 @@ async function onSubmitQuestion() {
             return
         }
 
-        console.error('[v1.1.0] Erro no prompt:', error)
+        console.error('[v1.1.1] Erro no prompt:', error)
 
         if (error.name === 'NotSupportedError') {
             elements.output.textContent =
@@ -504,7 +584,7 @@ async function* askAI(question, temperature, topK) {
     const multimodal = aiContext.imageFiles.length > 0 || Boolean(aiContext.audioFile)
     const expectedOptions = buildExpectedOptions()
 
-    console.log('[v1.1.0] Criando sessão:', {
+    console.log('[v1.1.1] Criando sessão:', {
         temperature,
         topK,
         language: elements.language.value,
@@ -519,7 +599,7 @@ async function* askAI(question, temperature, topK) {
         topK
     })
 
-    console.log('[v1.1.0] availability da sessão:', availability)
+    console.log('[v1.1.1] availability da sessão:', availability)
 
     if (availability === 'unavailable') {
         throw new DOMException(
@@ -547,7 +627,7 @@ async function* askAI(question, temperature, topK) {
         monitor(monitor) {
             monitor.addEventListener('downloadprogress', (event) => {
                 const percent = Math.round(event.loaded * 100)
-                console.log(`[v1.1.0] Download da sessão: ${percent}%`)
+                console.log(`[v1.1.1] Download da sessão: ${percent}%`)
                 setStatus(
                     `Preparando recursos do modelo${multimodal ? ' multimodal' : ''}: ${percent}%`,
                     'warning'
@@ -558,7 +638,7 @@ async function* askAI(question, temperature, topK) {
 
     aiContext.session = session
 
-    console.log('[v1.1.0] Sessão criada:', {
+    console.log('[v1.1.1] Sessão criada:', {
         temperature: session.temperature,
         topK: session.topK,
         multimodal
@@ -605,7 +685,7 @@ function toggleSendOrStopButton(isGenerating) {
 }
 
 async function initialize() {
-    console.log('[Web AI Extension v1.1.0] inicializando')
+    console.log('[Web AI Extension v1.1.1] inicializando')
 
     elements.year.textContent = new Date().getFullYear()
     setupEventListeners()
@@ -636,7 +716,7 @@ async function initialize() {
             englishTextModelOptions()
         )
 
-        console.log('[v1.1.0] availability base:', availability)
+        console.log('[v1.1.1] availability base:', availability)
 
         if (availability === 'available') {
             const params = await LanguageModel.params()
@@ -681,7 +761,7 @@ async function initialize() {
         )
 
     } catch (error) {
-        console.error('[v1.1.0] Erro ao verificar availability:', error)
+        console.error('[v1.1.1] Erro ao verificar availability:', error)
 
         aiContext.needsPreparation = true
         elements.button.disabled = false
@@ -695,6 +775,6 @@ async function initialize() {
 }
 
 initialize().catch((error) => {
-    console.error('[v1.1.0] Erro fatal:', error)
+    console.error('[v1.1.1] Erro fatal:', error)
     setStatus(`Erro fatal: ${error.message}`, 'error')
 })

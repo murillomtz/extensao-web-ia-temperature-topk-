@@ -2,7 +2,7 @@
 
 Extensão experimental para testar a **Prompt API nativa do Google Chrome** usando o modelo local **Gemini Nano**.
 
-A versão `1.1.0` mantém todas as funcionalidades anteriores e adiciona entrada multimodal.
+A versão `1.1.1` mantém todas as funcionalidades anteriores e adiciona entrada multimodal.
 
 ## Funcionalidades
 
@@ -37,6 +37,108 @@ A versão `1.1.0` mantém todas as funcionalidades anteriores e adiciona entrada
 Use o **Google Chrome normal atualizado**.
 
 A Prompt API executa com um modelo local do Chrome. O Gemini Nano pode precisar ser baixado na primeira utilização.
+
+
+## Requisitos esperados por modalidade
+
+A disponibilidade das modalidades depende do modelo que o Chrome instalou e das capacidades detectadas no dispositivo.
+
+| Modalidade | Requisito esperado |
+|---|---|
+| Texto | Prompt API disponível e modelo local compatível |
+| Imagem | Prompt API Multimodal Input habilitada + capability `image` disponível |
+| Áudio | Prompt API Multimodal Input habilitada + GPU compatível + capability `audio` disponível |
+| Texto + imagem + áudio | Todas as capabilities usadas precisam estar disponíveis ao mesmo tempo |
+
+A forma correta de validar é usar `LanguageModel.availability()` para cada configuração.
+
+Exemplo — áudio:
+
+```javascript
+await LanguageModel.availability({
+    expectedInputs: [
+        { type: 'text', languages: ['en'] },
+        { type: 'audio' }
+    ],
+    expectedOutputs: [
+        { type: 'text', languages: ['en'] }
+    ]
+})
+```
+
+Se retornar:
+
+```text
+available
+```
+
+a modalidade está disponível.
+
+Se retornar:
+
+```text
+unavailable
+```
+
+o Chrome não liberou aquela capability para a configuração atual.
+
+### Requisito de VRAM para áudio
+
+No Chromium atual, a entrada de áudio usa um limite padrão de:
+
+```text
+6144 MiB
+```
+
+Em GPUs comercializadas como **6 GB**, o valor realmente detectado pelo Chrome pode ficar um pouco abaixo desse limite.
+
+Exemplo observado durante este laboratório:
+
+```text
+NVIDIA GeForce RTX 4050 Laptop GPU
+nvidia-smi: 6141 MiB
+Chrome On-Device Internals: 5920 MiB
+Limite padrão para áudio: 6144 MiB
+```
+
+Nesse cenário:
+
+```text
+Texto  -> available
+Imagem -> available
+Áudio  -> unavailable
+```
+
+mesmo que a GPU seja compatível e tenha aproximadamente 6 GB de VRAM.
+
+### Modo experimental para GPUs próximas de 6 GB
+
+Para fins de laboratório, é possível iniciar o Chrome reduzindo o limite de áudio para `5000 MiB`.
+
+Feche completamente todas as janelas do Chrome e execute no **PowerShell**:
+
+```powershell
+& "C:\Program Files\Google\Chrome\Application\chrome.exe" --enable-features="AIPromptAPI,AIPromptAPIMultimodalInput,OnDeviceModelGpuAudioInput:on_device_model_audio_input_vram_min/5000"
+```
+
+Depois abra novamente a extensão e valide:
+
+```javascript
+await LanguageModel.availability({expectedInputs:[{type:'text',languages:['en']},{type:'audio'}],expectedOutputs:[{type:'text',languages:['en']}]})
+```
+
+O esperado, quando o override funcionar, é:
+
+```text
+available
+```
+
+> **Importante:** esse parâmetro não fica salvo.  
+> Ele vale somente para a execução do Chrome iniciada com esse comando.  
+> Se o Chrome for fechado completamente, reiniciado ou aberto normalmente depois, será necessário executar o comando novamente.
+
+A extensão também faz uma checagem discreta das capabilities multimodais. Se o áudio estiver `unavailable`, o Console mostra um aviso recolhido com a orientação e o comando experimental.
+
 
 ---
 
@@ -347,6 +449,33 @@ Enable internal debugging pages
         ↓
 chrome://on-device-internals
 ```
+
+Nessa tela, observe principalmente:
+
+```text
+Broker Properties
+Possible Capabilities
+Manifest Criteria
+Assets
+Use Cases
+Models
+```
+
+Para áudio, `Possible Capabilities` deve incluir `Audio`.
+
+Exemplo:
+
+```text
+Possible Capabilities: Image, Audio
+```
+
+Se aparecer apenas:
+
+```text
+Possible Capabilities: Image
+```
+
+o Chrome não liberou áudio para aquela execução.
 
 Use essa tela se:
 
