@@ -596,7 +596,6 @@ GitHub:
 ```text
 https://github.com/murillomtz
 ```
-,
 
 **Categoria: Inteligência Artificial (IA) · LLM**
 
