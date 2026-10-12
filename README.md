@@ -1,8 +1,19 @@
-# Web AI — Temperature, Top K e Multimodal com Gemini Nano
+# Web AI com Gemini Nano
 
 Extensão experimental para testar a **Prompt API nativa do Google Chrome** usando o modelo local **Gemini Nano**.
 
 A versão `1.1.1` mantém todas as funcionalidades anteriores e adiciona entrada multimodal.
+
+**Categoria:** Inteligência Artificial (IA) · LLM · Extensão de navegador.
+
+## Tecnologias principais
+
+- JavaScript
+- Chrome Extension Manifest V3
+- Prompt API do Chrome
+- Gemini Nano
+
+A interface e a integração com o modelo local estão no mesmo repositório. Não há um backend Java separado nem um servidor próprio de inferência; a disponibilidade do modelo depende do Chrome e do dispositivo.
 
 ## Funcionalidades
 
@@ -607,3 +618,14 @@ https://github.com/murillomtz
 - HTML e CSS
 
 A extensão experimenta geração de texto com parâmetros como temperature e topK, além de entradas multimodais. O uso do modelo depende da disponibilidade da Prompt API e do Gemini Nano na versão do Chrome instalada.
+
+
+## Capturas da aplicação
+
+Na coleta de 12/10/2026, o navegador disponível não oferecia a API LanguageModel necessária para preparar o modelo e gerar respostas. A interface estática pôde ser aberta, mas isso não comprovou o funcionamento da geração por IA.
+
+Não foram adicionadas capturas de respostas inventadas ou da tela de indisponibilidade como se fossem uma demonstração funcional. Uma nova coleta deve utilizar Chrome com a extensão instalada e o modelo realmente disponível.
+
+## Histórico
+
+Repositório criado no GitHub em **2026-09-20**. Essa data identifica a criação do repositório; não comprova o início nem a conclusão do desenvolvimento.
