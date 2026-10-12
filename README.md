@@ -596,3 +596,15 @@ GitHub:
 ```text
 https://github.com/murillomtz
 ```
+,
+
+**Categoria: Inteligência Artificial (IA) · LLM**
+
+## Tecnologias principais
+
+- JavaScript
+- Prompt API do Chrome
+- Gemini Nano local
+- HTML e CSS
+
+A extensão experimenta geração de texto com parâmetros como temperature e topK, além de entradas multimodais. O uso do modelo depende da disponibilidade da Prompt API e do Gemini Nano na versão do Chrome instalada.
